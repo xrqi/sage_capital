@@ -100,8 +100,7 @@ src/
 - **交互**: 细腻的动画过渡，营造沉浸式体验
 
 截图
-![截图](public\pic\Snipaste_2026-04-03_20-38-26.jpg)
-![截图](public\pic\Snipaste_2026-04-03_20-38-40.jpg)
+![截图](public/pic/Snipaste_2026-04-03_20-38-40.jpg)
 
 
 

@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 云轩阁
 
-## Getting Started
+> 云轩阁中，百工汇聚，逍遥自在，问道求真。
 
-First, run the development server:
+一个古风意境的 AI 助手应用，融合中国传统文化与现代人工智能技术，为您提供沉浸式的数字体验。
+
+## 功能模块
+
+### 百工堂
+
+群贤毕至，各司其职，为君分忧解劳。
+
+| 智能体 | 职责 | 描述 |
+|--------|------|------|
+| 周报先生 | 文书撰写 | 为君执笔，妙手成章。周报、日报、总结，信手拈来。 |
+| 审码御史 | 代码审查 | 明察秋毫，去芜存菁。为你的代码把关护航。 |
+| 灵犀阁主 | 头脑风暴 | 集思广益，触类旁通。与你共探无限可能。 |
+| 算筹博士 | 数据分析 | 洞察数理，明辨趋势。让数据为你说话。 |
+| 通译使者 | 翻译润色 | 贯通中西，信达雅兼。助你跨越语言之障。 |
+| 记事书童 | 会议纪要 | 耳聪目明，笔录如飞。不遗漏每一个要点。 |
+
+### 逍遥园
+
+偷得浮生半日闲，且听风吟且品茗。
+
+- **吐纳术** - 调息养气，静心凝神
+- **晨言录** - 一言一悟，启迪心智
+- **天籁阁** - 万籁俱寂，唯余天音
+- **丹青坊** - 挥毫泼墨，随心所欲
+
+### 问道阁
+
+吾日三省吾身，修心养性，破迷开悟。
+
+- **观心室** - 闭目内观，洞察本心
+- **论道场** - 以辩明理，以论破执
+- **鉴真阁** - 观过知仁，察己明性
+
+## 技术栈
+
+- **框架**: Next.js 16.2.1
+- **前端**: React 19.2.4 + TypeScript 5
+- **样式**: Tailwind CSS 4
+- **状态管理**: Zustand 5
+- **组件库**: shadcn/ui
+- **图标**: Lucide React
+
+## 快速开始
+
+### 环境要求
+
+- Node.js 18.0 或更高版本
+- npm 或 pnpm
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 开发模式
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 [http://localhost:3000](http://localhost:3000) 查看应用。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 构建生产版本
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 项目结构
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js 应用路由
+│   ├── cultivation/        # 问道阁模块
+│   ├── park/               # 逍遥园模块
+│   └── workspace/          # 百工堂模块
+├── components/             # React 组件
+│   ├── chat/               # 聊天相关组件
+│   ├── layout/             # 布局组件
+│   └── ui/                 # UI 基础组件
+└── lib/                    # 工具库
+    ├── agents.ts           # 智能体配置
+    ├── ai-service.ts       # AI 服务
+    └── store.ts            # 状态管理
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 设计理念
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+云轩阁以中国传统文化为底蕴，采用古典雅致的视觉风格：
 
-## Deploy on Vercel
+- **色彩**: 以朱砂色 (#d97760) 为主色调，配以墨色、古纸色等传统配色
+- **字体**: 衬线字体营造古典韵味
+- **交互**: 细腻的动画过渡，营造沉浸式体验
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 许可证
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+本项目仅供学习交流使用。

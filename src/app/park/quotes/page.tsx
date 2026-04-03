@@ -12,6 +12,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getAIConfig } from "@/lib/ai-config";
 
+// localStorage 缓存 key
+const QUOTES_CACHE_KEY = "quotes_cache_v1";
+const LOADED_CATEGORIES_KEY = "quotes_loaded_categories_v1";
+
+interface CachedQuotes {
+  [categoryId: string]: QuoteItem[];
+}
+
 interface QuoteItem {
   content: string;
   author: string;
@@ -212,6 +220,48 @@ function getRandomQuote(quotes: QuoteItem[], currentQuote: QuoteItem | null): Qu
   return quotes[newIndex];
 }
 
+// 从 localStorage 读取缓存
+function getCachedQuotes(): CachedQuotes {
+  if (typeof window === "undefined") return {};
+  try {
+    const cached = localStorage.getItem(QUOTES_CACHE_KEY);
+    return cached ? JSON.parse(cached) : {};
+  } catch {
+    return {};
+  }
+}
+
+// 保存到 localStorage
+function saveCachedQuotes(cache: CachedQuotes) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(QUOTES_CACHE_KEY, JSON.stringify(cache));
+  } catch (e) {
+    console.error("保存缓存失败:", e);
+  }
+}
+
+// 从 localStorage 读取已加载的分类
+function getLoadedCategoriesFromStorage(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const stored = localStorage.getItem(LOADED_CATEGORIES_KEY);
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+// 保存已加载的分类
+function saveLoadedCategories(categories: Set<string>) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LOADED_CATEGORIES_KEY, JSON.stringify([...categories]));
+  } catch (e) {
+    console.error("保存分类记录失败:", e);
+  }
+}
+
 export default function QuotesPage() {
   const [currentCategory, setCurrentCategory] = useState("tangshi");
   const [quotes, setQuotes] = useState<QuoteItem[]>([]);
@@ -219,13 +269,33 @@ export default function QuotesPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [loadedCategories, setLoadedCategories] = useState<Set<string>>(new Set());
+  const [isMounted, setIsMounted] = useState(false);
 
   const currentCategoryInfo = categories.find((c) => c.id === currentCategory);
 
+  // 客户端挂载标记（避免 SSR Hydration 问题）
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // 从 localStorage 恢复缓存状态
+  useEffect(() => {
+    if (!isMounted) return;
+    const stored = getLoadedCategoriesFromStorage();
+    setLoadedCategories(stored);
+  }, [isMounted]);
+
   // 加载分类数据
   const loadCategory = useCallback(async (categoryId: string) => {
-    if (loadedCategories.has(categoryId)) {
-      return; // 已加载过，直接使用缓存
+    // 直接从 localStorage 检查缓存（不依赖内存状态）
+    const cached = getCachedQuotes();
+    if (cached[categoryId] && cached[categoryId].length > 0) {
+      // 有缓存，直接使用
+      setQuotes(cached[categoryId]);
+      setCurrentQuote(getRandomQuote(cached[categoryId], null));
+      // 同步内存状态
+      setLoadedCategories(prev => new Set(prev).add(categoryId));
+      return;
     }
 
     setIsLoading(true);
@@ -234,15 +304,23 @@ export default function QuotesPage() {
       const newQuotes = await fetchQuotesFromAI(category);
       setQuotes(newQuotes);
       setCurrentQuote(getRandomQuote(newQuotes, null));
+      
+      // 更新内存状态
       setLoadedCategories(prev => new Set(prev).add(categoryId));
+      
+      // 保存到 localStorage
+      cached[categoryId] = newQuotes;
+      saveCachedQuotes(cached);
+      saveLoadedCategories(new Set([...getLoadedCategoriesFromStorage(), categoryId]));
     }
     setIsLoading(false);
-  }, [loadedCategories]);
+  }, []);
 
   // 初始加载
   useEffect(() => {
+    if (!isMounted) return;
     loadCategory(currentCategory);
-  }, []);
+  }, [isMounted, loadCategory]);
 
   const handleRefresh = useCallback(() => {
     if (quotes.length === 0) return;
@@ -258,17 +336,21 @@ export default function QuotesPage() {
     
     setCurrentCategory(categoryId);
     
-    if (loadedCategories.has(categoryId)) {
-      // 已加载过，切换到缓存的数据
-      const category = categories.find(c => c.id === categoryId);
-      if (category) {
-        // 这里应该从缓存获取，简化处理重新加载
-        await loadCategory(categoryId);
+    // 检查是否有缓存（内存或 localStorage）
+    const hasCache = loadedCategories.has(categoryId);
+    
+    if (hasCache) {
+      // 有缓存，直接从缓存读取
+      const cached = getCachedQuotes();
+      if (cached[categoryId]) {
+        setQuotes(cached[categoryId]);
+        setCurrentQuote(getRandomQuote(cached[categoryId], null));
+        return;
       }
-    } else {
-      // 首次加载该分类
-      await loadCategory(categoryId);
     }
+    
+    // 无缓存，加载新数据
+    await loadCategory(categoryId);
   };
 
   return (

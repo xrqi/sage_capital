@@ -142,3 +142,378 @@
     @apply font-serif tracking-wide;
   }
 }
+
+/* ==================== 浮沉光标样式 ==================== */
+/* 隐藏默认光标 */
+* {
+  cursor: none !important;
+}
+
+/* 浮沉光标主体 - 斜向设计 */
+.fuchen-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-30%, -10%) rotate(-15deg);
+  transition: transform 0.06s ease-out;
+  /* 确保光标不拦截点击事件 */
+  width: 40px;
+  height: 70px;
+}
+
+/* 确保拂尘不拦截鼠标事件 */
+.fuchen-cursor svg {
+  pointer-events: none;
+}
+
+/* 拂尘鬃毛自然飘动 - 有垂感的重力摆动 */
+.fuchen-hairs {
+  animation: hairGravity 4s ease-in-out infinite;
+  transform-origin: 24px 28px;
+}
+
+/* 手柄轻微摆动 */
+.fuchen-handle {
+  animation: handleSway 4s ease-in-out infinite;
+  transform-origin: 24px 52px;
+}
+
+/* 底部挂绳摆动 */
+.fuchen-bottom {
+  animation: bottomSway 3.5s ease-in-out infinite;
+  transform-origin: 24px 53px;
+}
+
+/* 鬃毛重力摆动 - 自然下垂的钟摆效果 */
+@keyframes hairGravity {
+  0%, 100% {
+    transform: rotate(-1.5deg);
+  }
+  25% {
+    transform: rotate(0.5deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+  75% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes handleSway {
+  0%, 100% {
+    transform: rotate(-0.3deg);
+  }
+  50% {
+    transform: rotate(0.3deg);
+  }
+}
+
+@keyframes bottomSway {
+  0%, 100% {
+    transform: rotate(-0.8deg);
+  }
+  50% {
+    transform: rotate(0.8deg);
+  }
+}
+
+/* 点击甩动效果 - 视频6-9秒：完整的大幅度左右摆动周期（延长版） */
+.fuchen-cursor.swinging {
+  animation: fuchenSwing6to9 5s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+@keyframes fuchenSwing6to9 {
+  /* 0% 初始 */
+  0% {
+    transform: translate(-30%, -10%) rotate(-15deg) scale(1);
+  }
+  /* 12% 左摆最大 */
+  12% {
+    transform: translate(-35%, -8%) rotate(-50deg) scale(1.05);
+  }
+  /* 25% 回摆 */
+  25% {
+    transform: translate(-28%, -10%) rotate(-10deg) scale(1.03);
+  }
+  /* 40% 右摆最大 */
+  40% {
+    transform: translate(-26%, -9%) rotate(25deg) scale(1.04);
+  }
+  /* 55% 回摆 */
+  55% {
+    transform: translate(-29%, -10%) rotate(5deg) scale(1.02);
+  }
+  /* 70% 衰减 */
+  70% {
+    transform: translate(-30%, -10%) rotate(-8deg) scale(1.01);
+  }
+  /* 100% 完成 */
+  100% {
+    transform: translate(-30%, -10%) rotate(-15deg) scale(1);
+  }
+}
+
+/* 点击时鬃毛摆动 - 延长版 */
+.fuchen-cursor.swinging .fuchen-hairs {
+  animation: hairSwing6to9 5.5s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.fuchen-cursor.swinging .fuchen-handle {
+  animation: handleSwing6to9 5s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.fuchen-cursor.swinging .fuchen-bottom {
+  animation: bottomSwing6to9 6s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* 鬃毛摆动 - 快速连贯甩动 */
+@keyframes hairSwing6to9 {
+  /* 0% 初始 */
+  0% { 
+    transform: rotate(0deg) scaleY(1) skewX(0deg); 
+  }
+  /* 15% - 左摆最大，毛梢展开 */
+  15% { 
+    transform: rotate(-60deg) scaleY(1.18) skewX(10deg); 
+  }
+  /* 30% - 回摆经过中心 */
+  30% { 
+    transform: rotate(-10deg) scaleY(1.08) skewX(3deg); 
+  }
+  /* 45% - 右摆最大 */
+  45% { 
+    transform: rotate(45deg) scaleY(1.15) skewX(-8deg); 
+  }
+  /* 60% - 回摆 */
+  60% { 
+    transform: rotate(15deg) scaleY(1.05) skewX(-2deg); 
+  }
+  /* 75% - 衰减 */
+  75% { 
+    transform: rotate(-5deg) scaleY(1.02) skewX(1deg); 
+  }
+  /* 100% - 静止 */
+  100% { 
+    transform: rotate(0deg) scaleY(1) skewX(0deg); 
+  }
+}
+
+/* 手柄摆动 - 快速流畅 */
+@keyframes handleSwing6to9 {
+  0% { transform: rotate(0deg); }
+  12% { transform: rotate(-35deg); }
+  25% { transform: rotate(-10deg); }
+  40% { transform: rotate(30deg); }
+  55% { transform: rotate(10deg); }
+  70% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* 挂绳摆动 - 快速飘逸 */
+@keyframes bottomSwing6to9 {
+  0% { transform: rotate(0deg) scaleY(1); }
+  15% { transform: rotate(-40deg) scaleY(1.15); }
+  30% { transform: rotate(-15deg) scaleY(1.08); }
+  45% { transform: rotate(35deg) scaleY(1.18); }
+  60% { transform: rotate(15deg) scaleY(1.05); }
+  75% { transform: rotate(-5deg) scaleY(1.02); }
+  100% { transform: rotate(0deg) scaleY(1); }
+}
+
+/* ==================== 点击仙气粒子效果 ==================== */
+.immortal-particles {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, rgba(217, 119, 96, 0.8) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: particleBurst 0.6s ease-out forwards;
+  animation-delay: var(--delay);
+}
+
+.particle:nth-child(odd) {
+  background: radial-gradient(circle, rgba(240, 238, 230, 0.9) 0%, transparent 70%);
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: 
+      translate(
+        calc(cos(var(--i) * 60deg) * 40px),
+        calc(sin(var(--i) * 60deg) * 40px - 20px)
+      ) 
+      scale(0);
+    opacity: 0;
+  }
+}
+
+/* ==================== 页面切换仙气动效 ==================== */
+.mist-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mist-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* 多层云雾 */
+.mist-layer {
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(250, 249, 245, 0.95) 0%,
+    rgba(240, 238, 230, 0.8) 30%,
+    rgba(217, 119, 96, 0.1) 60%,
+    transparent 80%
+  );
+  filter: blur(40px);
+  transform: scale(0);
+  transition: transform 0.6s ease-out;
+}
+
+.mist-overlay.active .mist-layer {
+  transform: scale(2);
+}
+
+.mist-layer-1 {
+  animation: mistDrift 8s ease-in-out infinite;
+}
+
+.mist-layer-2 {
+  animation: mistDrift 10s ease-in-out infinite reverse;
+  background: radial-gradient(
+    ellipse at 30% 70%,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(250, 249, 245, 0.6) 40%,
+    transparent 70%
+  );
+}
+
+.mist-layer-3 {
+  animation: mistDrift 12s ease-in-out infinite;
+  background: radial-gradient(
+    ellipse at 70% 30%,
+    rgba(240, 238, 230, 0.9) 0%,
+    rgba(217, 119, 96, 0.05) 50%,
+    transparent 75%
+  );
+}
+
+@keyframes mistDrift {
+  0%, 100% {
+    transform: scale(2) translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: scale(2.1) translate(2%, -1%) rotate(1deg);
+  }
+  66% {
+    transform: scale(1.9) translate(-1%, 2%) rotate(-1deg);
+  }
+}
+
+/* 仙气 Aura 粒子 */
+.immortal-aura {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.aura-particle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #d97760 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: auraFloat 2s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.15s);
+}
+
+.aura-particle:nth-child(3n) {
+  background: radial-gradient(circle, #f0eee6 0%, transparent 70%);
+  width: 6px;
+  height: 6px;
+}
+
+.aura-particle:nth-child(5n) {
+  background: radial-gradient(circle, rgba(217, 119, 96, 0.5) 0%, transparent 70%);
+  width: 3px;
+  height: 3px;
+}
+
+.mist-overlay.active .aura-particle {
+  opacity: 0.6;
+}
+
+@keyframes auraFloat {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-100px) translateX(20px) scale(1.5);
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-200px) translateX(-10px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* 内容层过渡 */
+.content-layer {
+  transition: 
+    opacity 0.5s ease-out,
+    filter 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+
+.content-layer.fading {
+  opacity: 0;
+  filter: blur(8px);
+  transform: scale(0.98);
+}
+
+.content-layer.visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* 链接和按钮悬停时的特殊光标提示 */
+a:hover ~ .fuchen-cursor,
+button:hover ~ .fuchen-cursor {
+  transform: translate(-50%, -20%) scale(1.1);
+}
+
+/* 选中文字时的光标样式 */
+::selection {
+  background: rgba(217, 119, 96, 0.3);
+}
